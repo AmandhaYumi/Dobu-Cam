@@ -46,15 +46,16 @@ def abrir_camera(camera):
     return captura
 
 
-def detectar_por_movimento(camera, min_area, intervalo_envio, intervalo_frame, mostrar_janela, marcar_deteccao):
+def detectar_por_movimento(camera, min_area, intervalo_envio, intervalo_frame, mostrar_janela, marcar_deteccao, frames_confirmacao):
     captura = abrir_camera(camera)
 
     if not captura.isOpened():
         raise RuntimeError("Nao foi possivel abrir a camera. Confira o indice ou a URL informada.")
 
-    primeiro_frame = None
+    fundo = None
     ultimo_envio = 0
     ultimo_frame_salvo = 0
+    frames_com_movimento = 0
     origem = "camera-celular" if str(camera).startswith("http") else "webcam-real"
 
     print("Dobu-CAM real iniciada.")
@@ -73,13 +74,15 @@ def detectar_por_movimento(camera, min_area, intervalo_envio, intervalo_frame, m
             cinza = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             cinza = cv2.GaussianBlur(cinza, (21, 21), 0)
 
-            if primeiro_frame is None:
-                primeiro_frame = cinza
+            if fundo is None:
+                fundo = cinza.astype("float")
                 continue
 
-            diferenca = cv2.absdiff(primeiro_frame, cinza)
-            limiar = cv2.threshold(diferenca, 28, 255, cv2.THRESH_BINARY)[1]
-            limiar = cv2.dilate(limiar, None, iterations=2)
+            cv2.accumulateWeighted(cinza, fundo, 0.03)
+            diferenca = cv2.absdiff(cinza, cv2.convertScaleAbs(fundo))
+            limiar = cv2.threshold(diferenca, 55, 255, cv2.THRESH_BINARY)[1]
+            limiar = cv2.erode(limiar, None, iterations=2)
+            limiar = cv2.dilate(limiar, None, iterations=3)
             contornos, _ = cv2.findContours(limiar.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
             maior_area = 0
@@ -96,8 +99,14 @@ def detectar_por_movimento(camera, min_area, intervalo_envio, intervalo_frame, m
                     x, y, largura, altura = cv2.boundingRect(contorno)
                     cv2.rectangle(frame, (x, y), (x + largura, y + altura), (24, 160, 88), 2)
 
-            nivel_movimento = min(0.99, maior_area / 18000) if pet_detectado else 0.08
-            status = "PET/MOVIMENTO DETECTADO" if pet_detectado else "SEM DETECCAO"
+            if pet_detectado:
+                frames_com_movimento += 1
+            else:
+                frames_com_movimento = 0
+
+            pet_confirmado = frames_com_movimento >= frames_confirmacao
+            nivel_movimento = min(0.99, maior_area / 42000) if pet_confirmado else 0.05
+            status = "PET/MOVIMENTO DETECTADO" if pet_confirmado else "SEM DETECCAO"
 
             if time.time() - ultimo_frame_salvo >= intervalo_frame:
                 enviar_frame(frame)
@@ -107,7 +116,7 @@ def detectar_por_movimento(camera, min_area, intervalo_envio, intervalo_frame, m
                 cv2.imshow("Dobu-CAM real", frame)
 
             if time.time() - ultimo_envio >= intervalo_envio:
-                enviar_status(pet_detectado, nivel_movimento, origem)
+                enviar_status(pet_confirmado, nivel_movimento, origem)
                 print(f"{status} | movimento={nivel_movimento:.2f}")
                 ultimo_envio = time.time()
 
@@ -127,11 +136,12 @@ if __name__ == "__main__":
         default="0",
         help="Indice da webcam, ex: 0, ou URL de camera IP/celular, ex: http://192.168.0.20:8080/video",
     )
-    parser.add_argument("--min-area", type=int, default=1800, help="Area minima para considerar deteccao.")
+    parser.add_argument("--min-area", type=int, default=12000, help="Area minima para considerar deteccao.")
     parser.add_argument("--intervalo", type=float, default=1.5, help="Intervalo em segundos entre envios HTTP.")
     parser.add_argument("--frame-intervalo", type=float, default=0.8, help="Intervalo em segundos para atualizar a imagem do dashboard.")
     parser.add_argument("--show-window", action="store_true", help="Mostra tambem a janela do OpenCV.")
     parser.add_argument("--draw-detection", action="store_true", help="Desenha a caixa de deteccao para demonstrar Visao Computacional.")
+    parser.add_argument("--confirm-frames", type=int, default=14, help="Quantidade de frames seguidos com movimento para confirmar deteccao.")
     args = parser.parse_args()
 
     detectar_por_movimento(
@@ -141,4 +151,5 @@ if __name__ == "__main__":
         args.frame_intervalo,
         args.show_window,
         args.draw_detection,
+        args.confirm_frames,
     )
