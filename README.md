@@ -1,62 +1,78 @@
 # Dobu-CAM 🐾📷
 
-Sistema de monitoramento inteligente para pets usando camera real, visao computacional e comunicacao HTTP.
+Sistema de monitoramento inteligente para pets utilizando câmera em tempo real, Visão Computacional e comunicação HTTP.
 
 ---
 
 ## 📖 Sobre o projeto
 
-A Dobu-CAM foi criada para ajudar responsaveis a acompanharem a presenca do pet em ambientes monitorados.
+A Dobu-CAM foi criada para ajudar responsáveis a monitorarem seus pets em ambientes internos, principalmente animais que necessitam de maior acompanhamento devido à idade, problemas de saúde ou necessidade de supervisão constante.
 
-O sistema utiliza uma webcam do notebook ou um celular com aplicativo de camera IP para transmitir video em tempo real, detectar movimentacao no ambiente e registrar quando o animal foi visto pela ultima vez. Essas informacoes sao enviadas para um backend Flask e exibidas em tempo real em um dashboard web.
+Muitos responsáveis se preocupam em não saber se o animal apareceu recentemente em determinado ambiente ou se está se movimentando normalmente durante o dia. Pensando nisso, o projeto busca oferecer uma forma simples e acessível de acompanhamento remoto utilizando uma webcam do notebook ou um celular com aplicativo de câmera IP.
 
-O projeto demonstra conceitos de:
+A solução utiliza técnicas de Visão Computacional para analisar os frames da câmera em tempo real com OpenCV, identificando movimentações no ambiente e registrando quando o pet foi visto pela última vez. Essas informações são enviadas por comunicação HTTP para um backend Flask, responsável por processar os dados e atualizar um dashboard web em tempo real.
 
-- 👁️ Visao Computacional
-- 🌐 Comunicacao HTTP
-- 📊 Dashboard em tempo real
-- 🔗 Integracao entre backend, camera e frontend
-- 🎥 Processamento de video em tempo real
+O projeto demonstra, na prática, a aplicação de tecnologias de Visão Computacional e comunicação entre dispositivos conectados, simulando um sistema inteligente de monitoramento de pets.
+
+Como prova de conceito, a aplicação já consegue:
+
+- 🎥 Capturar vídeo em tempo real;
+- 👁️ Processar imagens utilizando OpenCV;
+- 🐾 Detectar movimentação no ambiente;
+- 📁 Registrar eventos de entrada e saída;
+- 🕒 Atualizar o status do pet em tempo real;
+- 📊 Exibir o histórico e o “Last Seen” em um dashboard web.
+
+Tecnologias utilizadas no projeto:
+
+- 👁️ OpenCV para captura e processamento de imagem;
+- 🌐 Flask para criação da API e backend;
+- 📡 HTTP para comunicação entre câmera e sistema;
+- 💻 HTML, CSS e JavaScript para o dashboard web;
+- 🐍 Python como linguagem principal da aplicação.
+
+Atualmente, o sistema utiliza webcam e câmera IP como forma de demonstração funcional da proposta. Futuramente, o projeto poderá evoluir para utilizar câmeras dedicadas de monitoramento e dispositivos mais robustos, tornando a solução mais próxima de um sistema real de acompanhamento inteligente para pets.
+
+A Dobu-CAM demonstra a viabilidade técnica inicial da proposta ao integrar captura de vídeo, processamento visual, comunicação HTTP e exibição em tempo real em uma única aplicação funcional.
 
 ---
 
 ## ⚙️ Como funciona
 
 ```text
-Webcam / Celular com camera IP
-                |
-                | HTTP POST
-                v
+Webcam / Celular com câmera IP
+                │
+                │ HTTP POST
+                ▼
            Backend Flask
-                |
-                | HTTP GET
-                v
+                │
+                │ HTTP GET
+                ▼
            Dashboard Web
 ```
 
-A camera transmite os frames em tempo real utilizando OpenCV.
+A câmera transmite os frames em tempo real utilizando OpenCV.
 
-Quando ha movimentacao detectada:
+Quando há movimentação detectada:
 
-- 🐶 o sistema considera que o pet apareceu;
-- 📡 envia uma leitura HTTP para o backend;
-- 🕒 atualiza o horario de "ultima vez visto";
-- 📁 registra eventos de entrada e saida;
-- 🔄 atualiza automaticamente o dashboard.
+- 🐶 O sistema considera que o pet apareceu;
+- 📡 Envia uma leitura HTTP para o backend;
+- 🕒 Atualiza o horário de “Última vez visto”;
+- 📁 Registra eventos de entrada e saída;
+- 🔄 Atualiza automaticamente o dashboard.
 
 ---
 
 ## ✨ Funcionalidades
 
-- 📷 Camera em tempo real
-- 📱 Compatibilidade com webcam ou camera IP/celular
-- 📊 Dashboard web atualizado em tempo real
-- 🕒 Registro de "Last Seen" do pet
-- 📁 Historico de presenca
-- 🌐 Comunicacao HTTP entre os modulos
-- 👁️ Processamento de imagem com OpenCV
-- 🟩 Modo visual com caixa de deteccao
-- 🤖 Estrutura pronta para evoluir com IA
+- 📷 Captura de câmera em tempo real;
+- 📱 Compatibilidade com webcam ou câmera IP/celular;
+- 📊 Dashboard web atualizado em tempo real;
+- 🕒 Registro de “Last Seen” do pet;
+- 📁 Histórico de presença;
+- 🌐 Comunicação HTTP entre os módulos;
+- 👁️ Processamento de imagem com OpenCV;
+- 🟩 Modo visual com caixa de detecção.
 
 ---
 
@@ -81,13 +97,13 @@ Antes de iniciar, instale o Python pelo site oficial:
 https://www.python.org/downloads/
 ```
 
-Durante a instalacao, marque a opcao:
+Durante a instalação, marque a opção:
 
 ```text
 Add python.exe to PATH
 ```
 
-Depois abra um novo terminal e confirme:
+Depois, abra um novo terminal e confirme a instalação:
 
 ```bash
 python --version
@@ -108,7 +124,7 @@ Windows:
 .venv\Scripts\activate
 ```
 
-### 3️⃣ Instalando as dependencias
+### 3️⃣ Instalando as dependências
 
 ```bash
 python -m pip install -r requirements.txt
@@ -116,7 +132,7 @@ python -m pip install -r requirements.txt
 
 ---
 
-## ▶️ Passo a passo para a aplicacao funcionar
+## ▶️ Passo a passo para a aplicação funcionar
 
 ### 1️⃣ Inicie o backend
 
@@ -129,6 +145,8 @@ python backend.py
 
 Mantenha esse terminal aberto.
 
+---
+
 ### 2️⃣ Abra o dashboard
 
 No navegador, acesse:
@@ -137,40 +155,38 @@ No navegador, acesse:
 http://127.0.0.1:5000
 ```
 
-### 3️⃣ Conecte a camera
+---
 
-Para usar a webcam do notebook, abra outro terminal e rode:
+### 3️⃣ Conecte a câmera
+
+Para usar a webcam do notebook, abra outro terminal e execute:
 
 ```bash
 cd C:\Dobu-Cam
 python camera_iot.py
 ```
 
-Para usar a camera do celular:
+Para usar a câmera do celular:
 
-1. 📲 Instale um aplicativo de camera IP no celular.
-2. 📶 Conecte o celular e o computador no mesmo Wi-Fi.
-3. ▶️ Inicie o servidor da camera no aplicativo.
-4. 🔗 Copie a URL de video exibida pelo app.
-5. 💻 Rode no segundo terminal:
+1. 📲 Instale um aplicativo de câmera IP no celular;
+2. 📶 Conecte o celular e o computador na mesma rede Wi-Fi;
+3. ▶️ Inicie o servidor da câmera no aplicativo;
+4. 🔗 Copie a URL de vídeo exibida pelo app;
+5. 💻 Execute no segundo terminal:
 
 ```bash
 cd C:\Dobu-Cam
-python camera_iot.py --camera http://IP_DO_CELULAR:8080/video
+python camera_iot.py --camera http://ip_celular/video 
 ```
 
-Exemplo:
+---
 
-```bash
-python camera_iot.py --camera http://192.168.0.20:8080/video
-```
+## ✅ Resultado esperado
 
-### ✅ Resultado esperado
-
-- 📷 O dashboard mostra a imagem da camera.
-- 🟢 O status muda entre animal presente e animal ausente.
-- 🕒 O campo "Ultima vez visto" atualiza quando o pet aparece.
-- 📁 O historico registra quando o animal voltou e quando saiu da camera.
+- 📷 O dashboard mostra a imagem da câmera;
+- 🟢 O status muda entre “animal presente” e “animal ausente”;
+- 🕒 O campo “Última vez visto” atualiza quando o pet aparece;
+- 📁 O histórico registra quando o animal entrou ou saiu do ambiente.
 
 ---
 
@@ -188,7 +204,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 📷 Iniciando a camera
+## 📷 Iniciando a câmera
 
 ### Webcam do notebook
 
@@ -196,19 +212,19 @@ http://127.0.0.1:5000
 python camera_iot.py
 ```
 
-### Outra camera USB
+### Outra câmera USB
 
 ```bash
 python camera_iot.py --camera 1
 ```
 
-### Celular usando camera IP
+### Celular usando câmera IP
 
 ```bash
 python camera_iot.py --camera http://192.168.0.20:8080/video
 ```
 
-Voce pode usar aplicativos de camera IP no celular para transformar o aparelho em uma camera em tempo real.
+Você pode utilizar aplicativos de câmera IP no celular para transformar o aparelho em uma câmera em tempo real.
 
 📶 O computador e o celular precisam estar conectados na mesma rede Wi-Fi.
 
@@ -218,71 +234,24 @@ Voce pode usar aplicativos de camera IP no celular para transformar o aparelho e
 
 O painel web mostra:
 
-- 🐾 Status atual do pet
-- 🕒 Ultima vez visto
-- 📁 Historico de eventos
-- 📷 Fonte da camera
-- 🎥 Video processado em tempo real
+- 🐾 Status atual do pet;
+- 🕒 Última vez visto;
+- 📁 Histórico de eventos;
+- 📷 Fonte da câmera;
+- 🎥 Vídeo processado em tempo real.
 
-Caso a camera ainda nao esteja ativa, o sistema exibe uma mensagem aguardando conexao.
-
----
-
-## 🌐 Endpoints da API
-
-### Status do sistema
-
-```http
-GET /status
-```
-
-### Registrar pet detectado
-
-```http
-POST /update/1
-```
-
-### Registrar pet ausente
-
-```http
-POST /update/0
-```
-
-### Enviar frame atual da camera
-
-```http
-POST /camera-frame
-```
-
----
-
-## 📄 Exemplo de resposta
-
-```json
-{
-  "pet_detected": true,
-  "last_seen": "2026-05-21T10:50:00-03:00",
-  "confidence": 0.92,
-  "source": "dobu-cam-real",
-  "protocol": "HTTP",
-  "telemetry": {
-    "device_id": "dobu-cam-real",
-    "sensor": "webcam-real"
-  },
-  "events": []
-}
-```
+Caso a câmera ainda não esteja ativa, o sistema exibirá uma mensagem aguardando conexão.
 
 ---
 
 ## 👥 Integrantes
 
-- Amandha Yumi Toyota Artulino - RM: 563549
-- Giovanna Bardella Gomes - RM: 561439
-- Erick Takeshi Nakajune - RM: 566059
+- Amandha Yumi Toyota Artulino — RM: 563549
+- Giovanna Bardella Gomes — RM: 561439
+- Erick Takeshi Nakajune — RM: 566059
 
 ---
 
 # 🐾 Dobu-CAM
 
-Projeto academico desenvolvido para demonstracao de Visao Computacional aplicada ao monitoramento inteligente de pets.
+Projeto acadêmico desenvolvido para demonstração de Visão Computacional aplicada ao monitoramento inteligente de pets.
