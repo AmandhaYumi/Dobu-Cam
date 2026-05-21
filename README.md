@@ -163,11 +163,11 @@ Para usar a webcam do notebook, abra outro terminal e execute:
 
 ```bash
 cd C:\Dobu-Cam
-python camera_iot.py
+python camera_iot.py --draw-detection
 ```
 
 Para usar a câmera do celular:
-
+efssd
 1. 📲 Instale um aplicativo de câmera IP no celular;
 2. 📶 Conecte o celular e o computador na mesma rede Wi-Fi;
 3. ▶️ Inicie o servidor da câmera no aplicativo;
@@ -176,7 +176,7 @@ Para usar a câmera do celular:
 
 ```bash
 cd C:\Dobu-Cam
-python camera_iot.py --camera http://ip_celular/video 
+python camera_iot.py --camera http://ip_celular/video --draw-detection
 ```
 
 ---
